@@ -1,0 +1,76 @@
+{%- assign collection_handle = 'frontpage' -%}
+{%- assign collection = nil -%}
+{%- if collection_handle != blank -%}
+	{%- assign collection = collections[collection_handle] -%}
+{%- endif -%}
+
+{% comment %} {%- assign title 			= section.settings.title -%} {% endcomment %}
+{%- assign title 			= 'our best <span>sellers</span>' -%}
+{%- assign section_background 	= 'bg.static.png' | asset_url -%}
+
+{%- capture featured_collection -%}
+	{%- for product in collection.products -%}
+		<div class="swiper-slide slider__item featured-collection__col">
+			{%- include "product-card" with product: product -%}
+		</div>
+	{%- endfor -%}
+{%- endcapture -%}
+
+
+{%- if featured_collection != blank -%}
+	<div
+		id="featured-collection-{{- section.id -}}"
+		class="featured-collection pt-14 pb-10"
+		data-section-id="{{- section.id -}}"
+		data-section-type="featured-collection"
+		style="background-image: url({{section_background}})"
+	>
+		{%- if title != blank -%}
+			<div class="container featured-collection__container">
+				{% if title != blank %}
+					<h2 class="featured-collection__title">
+						{{- title -}}
+					</h2>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+
+		<div class="container featured-collection__container featured-collection__slider" >
+			<div class="swiper-container" data-slider>
+				<div class="swiper-wrapper slider__wrapper " >
+					{{- featured_collection -}}
+				</div>
+
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+{%- schema -%}
+	{
+		"name": "Featured Collection",
+		"settings": [
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Title",
+				"default": "hello title"
+			},
+			{
+				"type": "collection",
+				"id": "collection",
+				"label": "Collection"
+			}
+		],
+		"blocks": [
+			
+		],
+		"presets": [
+			{
+				"name": "Featured Collection",
+				"category": "Homepage"
+			}
+		]
+	}
+{%- endschema -%}

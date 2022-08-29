@@ -1,0 +1,17 @@
+@import "tailwindcss/base";
+@layer base {
+}
+
+@import "tailwindcss/components";
+@layer components {
+  @import "@/css/base/variables.scss";
+  @import "@/css/base/fonts.scss";
+  @import "@/css/snippets/site-logo.scss";
+  @import "@/css/sections/header.scss";
+  @import "@/css/sections/featured-collection.scss";
+  @import "@/css/snippets/product-card.scss";
+}
+
+@import "tailwindcss/utilities";
+@layer utilities {
+}

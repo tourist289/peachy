@@ -1,0 +1,76 @@
+{%- comment -%}
+	@params
+	product: product object, required
+{%- endcomment -%}
+
+{%- if product != blank -%}
+	{%- assign current_variant 		= product.first_available_variant -%}
+	{%- if current_variant == blank -%}
+		{%- assign current_variant = product.variants[0] -%}
+	{%- endif -%}
+
+	{%- assign featured_image = product.featured_image -%}
+
+	<div
+		class="product-card p-3.5 rounded-xl border-4 border-card-border  bg-card-bg" 
+		data-product-card
+		data-product-handle="{{- product.handle -}}"
+		data-product-card-current-variant-id="{{- current_variant.id -}}"
+	>
+
+		<a class="product-card__image-wrapper" href="{{- current_variant.url -}}" data-product-card-url>
+			<img
+				class="product-card__image product-card__image--featured "
+				src="{{- featured_image | img_url: 'master' -}}"
+				alt="{{- featured_image.alt -}}"
+			>
+		</a>
+
+		<div class="product-card__content mt-5">
+			<h3 class="product-card__title mb-3 uppercase">
+				<a
+					class="product-card__title-link"
+					href="{{- current_variant.url -}}"
+					data-product-card-url
+				>
+					{{- product.title -}}
+				</a>
+			</h3>
+
+			<select
+				id="product-select"
+				name="id"
+				class="product-card__variants variant-selector js-variant-selector flex w-full border-card-border bg-card-bg mb-5"
+			>
+				{% for variant in product.variants %}
+					<option class="bg-card-bg"
+						{% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+						value="{{- variant.id -}}"
+						data-variant-price = "{{ variant.price | money }}"
+					>
+						{{ variant.title }}
+					</option>  
+				{% endfor %}
+			</select>
+
+            <button class="product-card__add-btn w-full flex justify-center items-center uppercase js-add-to-cart" data-variant-id={{- current_variant.id -}}>
+                <span class="product-card__prices">
+					{% comment %} <span
+						class="product-card__price product-card__price--strikethrough {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}"
+						data-product-card-compared-at-price
+					>
+							{{- current_variant.compare_at_price | money -}}
+					</span> {% endcomment %}
+
+					<span
+						class="product-card__price {% if current_variant.compare_at_price > current_variant.price %}product-card__price--red{% endif %}"
+						data-product-card-price>{{- current_variant.price | money -}}</span>
+                </span>
+                    
+                <span> | Add to cart</span>
+            </button>
+        </div>
+
+		<script type="application/json" data-product-card-json>{%- render 'object-product-json', product: product -%}</script>
+	</div>
+{%- endif -%}
